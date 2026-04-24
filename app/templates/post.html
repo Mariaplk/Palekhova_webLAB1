@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% macro render_comment(comment, is_reply=False) %}
+<div class="d-flex {{ 'ms-5 mt-4' if is_reply else 'mt-4' }}">
+    <div class="flex-shrink-0">
+        <img src="{{ url_for('static', filename='images/avatar.jpg') }}"
+             class="rounded-circle comment-avatar"
+             alt="Аватар">
+    </div>
+    <div class="flex-grow-1 ms-3">
+        <h5 class="mb-1">{{ comment.author }}</h5>
+        <p class="mb-2">{{ comment.text }}</p>
+
+        {% if comment.replies %}
+            {% for reply in comment.replies %}
+                {{ render_comment(reply, True) }}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+{% block content %}
+<article class="mb-5">
+    <h1 class="mb-3">{{ post.title }}</h1>
+
+    <p class="text-muted mb-4">
+        Автор: {{ post.author }}<br>
+        Дата публикации: {{ post.date.strftime('%d.%m.%Y') }}
+    </p>
+
+    <img src="{{ url_for('static', filename='images/' + post.image_id) }}"
+         class="img-fluid rounded mb-4 post-image"
+         alt="Изображение поста">
+
+    <p class="post-text">{{ post.text }}</p>
+</article>
+
+<section class="mb-5">
+    <h2 class="mb-3">Оставьте комментарий</h2>
+    <form>
+        <div class="mb-3">
+            <label for="comment-text" class="form-label">Текст комментария</label>
+            <textarea id="comment-text"
+                      name="comment-text"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Введите ваш комментарий"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+</section>
+
+<section>
+    <h2 class="mb-4">Комментарии</h2>
+
+    {% if post.comments %}
+        {% for comment in post.comments %}
+            {{ render_comment(comment) }}
+        {% endfor %}
+    {% else %}
+        <p>Комментариев пока нет.</p>
+    {% endif %}
+</section>
+{% endblock %}
