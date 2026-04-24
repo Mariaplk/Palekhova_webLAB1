@@ -5,3 +5,19 @@ body {
 .avatar {
     max-width: 100%;
 }
+
+.comment-avatar {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+}
+
+.post-image {
+    width: 100%;
+    max-height: 600px;
+    object-fit: cover;
+}
+
+.post-text {
+    white-space: pre-line;
+}
